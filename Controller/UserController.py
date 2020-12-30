@@ -1,5 +1,7 @@
 import pickle
 from Model.User import User
+from Model.Password import Password
+
 class UserController:
   def __init__(self):
     self.users = []
@@ -33,3 +35,14 @@ class UserController:
           self.user = user
           return True
     return False
+
+  def addPassword(self, website, login, password, notes, logo):
+    password = Password(website, login, password, notes, logo)
+    for user in self.getUsers():
+      if user.getUsername() == self.user.getUsername():
+        user.addPassword(password)
+        self.user = user
+    print(self.users)
+    with open('data.pkl', 'wb') as output:
+      pickle.dump(self.getUsers(), output, pickle.HIGHEST_PROTOCOL)
+  

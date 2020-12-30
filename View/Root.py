@@ -34,9 +34,9 @@ class Root:
     leftDecoration.pack(side='left')
     Root.loginScreen.pack()
     
-    Root.loginScreen.pack_forget()
-    Dashboard().createWindow(Root.dashboard)
-    Root.dashboard.pack()
+    #Root.loginScreen.pack_forget()
+    #Dashboard().createWindow(Root.dashboard)
+    #Root.dashboard.pack()
 
     return Root.root
 
@@ -113,7 +113,8 @@ class RegisterForm(Root):
     loginButton.place(relx=0.1, rely=0.78, anchor=W, width=300, height=25)
 
 class Dashboard(Root):
-  rightTab = Frame(Root.dashboard, bg='#32425B', width = 600, height=450)
+  rightTab = Frame(Root.dashboard, bg='#32425B', width = 600, height=450, borderwidth=0)
+  #listOfOptions = Frame(canvas, height=380, borderwidth=0)
   def __init__(self):
     pass
   def createWindow(self, parent):
@@ -143,8 +144,30 @@ class Dashboard(Root):
     addNew.place(relx=0.95, rely=0.1, anchor=E)
     if var.get() == 1:
       h1.configure(text="Passwords")
-      addNew.configure(command=lambda:self.handleAddNewPassword(h1, addNew))
+      addNew.configure(command=lambda:self.handleAddNewPassword(listOfButtons, h1, addNew))
       Dashboard.rightTab.place(relx=1, rely=0.5, anchor=E, width=600, height=450)
+
+      canvas = Canvas(Dashboard.rightTab, height=380, bg='#32425B', bd=0, highlightthickness=0, relief='ridge')
+      scroll_y = Scrollbar(Dashboard.rightTab, orient="vertical", command=canvas.yview, bg='#32425B')
+
+      listOfButtons = Frame(canvas, height=380, borderwidth=0, bg='#32425B')
+      row = column = 0
+      for password in Dashboard.userController.user.getPasswords():
+        card = Label(listOfButtons, borderwidth=0, bg='#32425B', width=100)
+        cardLogotk = ImageTk.PhotoImage(password.getLogo().resize((50,50), Image.ANTIALIAS))
+        cardLogo = Label(card, borderwidth=0, bg='#32425B', image=cardLogotk)
+        cardLogo.image = cardLogotk
+        Button(card, text=password.getWebsite(), bg='#32425B', fg='white', borderwidth=0, image =cardLogotk, compound=TOP, width=100, padx=20, pady=20, wraplength=100).pack()
+        card.grid(row=int(row), column=column%4)
+        row=row+0.25
+        column=column+1
+      canvas.create_window(0, 0, anchor='nw', window=listOfButtons)
+      canvas.update_idletasks()
+
+      canvas.configure(scrollregion=canvas.bbox('all'), yscrollcommand=scroll_y.set)
+                      
+      canvas.place(relx=0, rely=1, anchor=SW, width=600)
+      scroll_y.place(relx=1, rely=1, anchor=SE, height=380)
     elif var.get() == 2:
       h1.configure(text="Credit Cards")
       addNew.configure(command=lambda: self.handleAddNewCreditCard(h1, addNew))
@@ -154,7 +177,8 @@ class Dashboard(Root):
       addNew.configure(command=lambda: self.handleAddNewNote(h1, addNew))
       Dashboard.rightTab.place(relx=1, rely=0.5, anchor=E, width=600, height=450)
   
-  def handleAddNewPassword(self, h1, addNew):
+  def handleAddNewPassword(self, parent, h1, addNew):
+    parent.destroy()
     h1.configure(text="Add New Password")
     addNew.destroy()
     AddNewPassword().createWindow(Dashboard.rightTab)
@@ -166,6 +190,7 @@ class Dashboard(Root):
     addNew.destroy()
 
 class AddNewPassword(Dashboard):
+  logo = None
   def __init__(self):
     self.sv = StringVar()
   def createWindow(self, parent):
@@ -196,16 +221,17 @@ class AddNewPassword(Dashboard):
     notesEntry.place(relx=0.1, rely=0.7, anchor=W, width=300, height=25)
 
     logoLabel.place(relx=0.9, rely=0.5, anchor=E, width=100, height=100)
-
-    print(Dashboard.userController.user)
-    saveButton = Button(parent, text = "SAVE", anchor = W, bg="#1ED5B9", fg="white", bd=0, padx=130)
+    saveButton = Button(parent, text = "SAVE", anchor = W, bg="#1ED5B9", fg="white", bd=0, padx=130, command= lambda: self.handleSavePassword(websiteEntry, loginEntry, passwordEntry, notesEntry, AddNewPassword.logo))
     saveButton.place(relx=0.1, rely=0.8, anchor=W, width=300, height=25)
 
   def callback(self, sv, logoLabel):
     url = 'http://logo.clearbit.com/{}?size=80'.format(sv.get())
     response = requests.get(url)
     if(response.status_code == 200):
-      logo = ImageTk.PhotoImage(Image.open(BytesIO(response.content)).resize((100,100), Image.ANTIALIAS))
-      logoLabel.configure(image = logo)
-      logoLabel.image = logo
-
+      logo = Image.open(BytesIO(response.content)).resize((100,100), Image.ANTIALIAS)
+      logotk = ImageTk.PhotoImage(logo)
+      logoLabel.configure(image = logotk)
+      logoLabel.image = logotk
+      AddNewPassword.logo = logo
+  def handleSavePassword(self, websiteEntry, loginEntry, passwordEntry, notesEntry, logo):
+    Root.userController.addPassword(websiteEntry.get(), loginEntry.get(), passwordEntry.get(), notesEntry.get(), logo)

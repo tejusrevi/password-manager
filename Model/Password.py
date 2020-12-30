@@ -1,10 +1,10 @@
 class Password:
-  def __init__(self, website, login, password, note):
+  def __init__(self, website, login, password, note, logo):
     self.website = website
     self.login = login
     self.password = password
     self.note = note
-  
+    self.logo = logo
   def setWebsite(self, website):
     self.website = website
   def getWebsite(self):
@@ -21,3 +21,7 @@ class Password:
     self.note = note
   def getNote(self):
     return self.note
+  def setLogo(self, logo):
+    self.logo = logo
+  def getLogo(self):
+    return self.logo

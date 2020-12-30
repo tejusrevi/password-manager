@@ -16,7 +16,9 @@ class User:
 
   def setPasswords(self, passwords):
     self.passwords = passwords
+
   def addPassword(self, password):
     self.passwords.append(password)
+    
   def getPasswords(self):
     return self.passwords
