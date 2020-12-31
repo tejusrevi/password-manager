@@ -1,4 +1,5 @@
 from tkinter import *
+from tkinter import messagebox
 from PIL import Image, ImageTk
 import webbrowser, requests
 from io import BytesIO
@@ -114,21 +115,21 @@ class RegisterForm(Root):
 
 class Dashboard(Root):
   rightTab = Frame(Root.dashboard, bg='#32425B', width = 600, height=450, borderwidth=0)
-  #listOfOptions = Frame(canvas, height=380, borderwidth=0)
+  addPasswordFrame = Frame(Root.dashboard, bg='red', width = 600, height=450, borderwidth=0)
   def __init__(self):
     pass
   def createWindow(self, parent):
     profileMenu = Frame(parent, bg='#3a4d6b', width = 200, height=450)
     profileMenu.place(relx=0, rely=0.5, anchor=W, width=200, height=450)
     Label(profileMenu, bg='#3a4d6b', fg='white', font=('Roboto',8), text="Welcome", borderwidth=0).pack( anchor = W , pady=3, padx=10)
-    Label(profileMenu, bg='#3a4d6b', fg='white', font=('Roboto',12), text='Tejus', borderwidth=0).pack( anchor = W , pady=5, padx=10)
+    Label(profileMenu, bg='#3a4d6b', fg='white', font=('Roboto',12), text=Dashboard.userController.user.getUsername(), borderwidth=0).pack( anchor = W , pady=5, padx=10)
     var = IntVar()
     R1 = Radiobutton(profileMenu, indicatoron = 0, width = 30, height=2, cursor="hand2",bg='#415575', fg='white', activebackground='#198a78', activeforeground='white', selectcolor='#198a78', padx = 20, borderwidth=0, text="Passwords", font=('Roboto',10), variable=var, value=1, command= lambda: self.handleRadioButton(var,Dashboard.rightTab))
     R1.pack( anchor = W , pady=1)
     R2 = Radiobutton(profileMenu, indicatoron = 0, width = 30, height=2, cursor="hand2",bg='#415575', fg='white', activebackground='#198a78', activeforeground='white', selectcolor='#198a78', padx = 20, borderwidth=0, text="Credit Cards", font=('Roboto',10), variable=var, value=2, command= lambda: self.handleRadioButton(var, Dashboard.rightTab))
     R2.pack( anchor = W, pady=1)
-    R3 = Radiobutton(profileMenu, indicatoron = 0, width = 30, height=2, cursor="hand2",bg='#415575', fg='white', activebackground='#198a78', activeforeground='white', selectcolor='#198a78', padx = 20, borderwidth=0, text="Secure Notes", font=('Roboto',10), variable=var, value=3, command= lambda: self.handleRadioButton(var,Dashboard.rightTab))
-    R3.pack( anchor = W, pady=1)
+    #R3 = Radiobutton(profileMenu, indicatoron = 0, width = 30, height=2, cursor="hand2",bg='#415575', fg='white', activebackground='#198a78', activeforeground='white', selectcolor='#198a78', padx = 20, borderwidth=0, text="Secure Notes", font=('Roboto',10), variable=var, value=3, command= lambda: self.handleRadioButton(var,Dashboard.rightTab))
+    #R3.pack( anchor = W, pady=1)
     logoutButton = Button(profileMenu, text = "LOGOUT", bg="#415575", fg="white", bd=0, highlightbackground='red', command = lambda: super(Dashboard, self).handleLogout())
     logoutButton.place(relx=0, rely=0.97, anchor=W, width=200, height=25)
 
@@ -138,62 +139,30 @@ class Dashboard(Root):
   def handleRadioButton(self, var, parent):
     for child in parent.winfo_children():
       child.destroy()
-    h1 = Label(parent, bg='#32425B', fg='white', font=('Roboto',14), borderwidth=0)
-    h1.place(relx=0.1, rely=0.1, anchor=W)
-    addNew = Button(parent, bg='#198a78', fg='white', font=('Roboto',10), text="Add new", borderwidth=0)
-    addNew.place(relx=0.95, rely=0.1, anchor=E)
     if var.get() == 1:
-      h1.configure(text="Passwords")
-      addNew.configure(command=lambda:self.handleAddNewPassword(listOfButtons, h1, addNew))
+
       Dashboard.rightTab.place(relx=1, rely=0.5, anchor=E, width=600, height=450)
-
-      canvas = Canvas(Dashboard.rightTab, height=380, bg='#32425B', bd=0, highlightthickness=0, relief='ridge')
-      scroll_y = Scrollbar(Dashboard.rightTab, orient="vertical", command=canvas.yview, bg='#32425B')
-
-      listOfButtons = Frame(canvas, height=380, borderwidth=0, bg='#32425B')
-      row = column = 0
-      for password in Dashboard.userController.user.getPasswords():
-        card = Label(listOfButtons, borderwidth=0, bg='#32425B', width=100)
-        cardLogotk = ImageTk.PhotoImage(password.getLogo().resize((50,50), Image.ANTIALIAS))
-        cardLogo = Label(card, borderwidth=0, bg='#32425B', image=cardLogotk)
-        cardLogo.image = cardLogotk
-        Button(card, text=password.getWebsite(), bg='#32425B', fg='white', borderwidth=0, image =cardLogotk, compound=TOP, width=100, padx=20, pady=20, wraplength=100).pack()
-        card.grid(row=int(row), column=column%4)
-        row=row+0.25
-        column=column+1
-      canvas.create_window(0, 0, anchor='nw', window=listOfButtons)
-      canvas.update_idletasks()
-
-      canvas.configure(scrollregion=canvas.bbox('all'), yscrollcommand=scroll_y.set)
-                      
-      canvas.place(relx=0, rely=1, anchor=SW, width=600)
-      scroll_y.place(relx=1, rely=1, anchor=SE, height=380)
+      PasswordList().createWindow(parent)
     elif var.get() == 2:
-      h1.configure(text="Credit Cards")
-      addNew.configure(command=lambda: self.handleAddNewCreditCard(h1, addNew))
+      #h1.configure(text="Credit Cards")
+      #addNew.configure(command=lambda: self.handleAddNewCreditCard(h1, addNew))
       Dashboard.rightTab.place(relx=1, rely=0.5, anchor=E, width=600, height=450)
     elif var.get() == 3:
-      h1.configure(text="Secure Notes")
-      addNew.configure(command=lambda: self.handleAddNewNote(h1, addNew))
+      #h1.configure(text="Secure Notes")
+      #addNew.configure(command=lambda: self.handleAddNewNote(h1, addNew))
       Dashboard.rightTab.place(relx=1, rely=0.5, anchor=E, width=600, height=450)
   
-  def handleAddNewPassword(self, parent, h1, addNew):
-    parent.destroy()
-    h1.configure(text="Add New Password")
-    addNew.destroy()
-    AddNewPassword().createWindow(Dashboard.rightTab)
-  def handleAddNewCreditCard(self, h1, addNew):
-    h1.configure(text="Add New Password")
-    addNew.destroy()
-  def handleAddNewNote(self, h1, addNew):
-    h1.configure(text="Add New Password")
-    addNew.destroy()
 
 class AddNewPassword(Dashboard):
   logo = None
   def __init__(self):
     self.sv = StringVar()
   def createWindow(self, parent):
+    for child in parent.winfo_children():
+      child.destroy()
+    h1 = Label(parent, bg='#32425B', fg='white', font=('Roboto',14), borderwidth=0, text='Add New Password')
+    h1.place(relx=0.1, rely=0.1, anchor=W)
+
     websiteLabel = Label(parent, bg='#32425B', fg='white', font=('Roboto',8), text="WEBSITE", borderwidth=0)
     websiteLabel.place(relx=0.1, rely=0.2, anchor=W)
 
@@ -209,7 +178,7 @@ class AddNewPassword(Dashboard):
     loginEntry.place(relx=0.1, rely=0.4, anchor=W, width=300, height=25)
     passwordLabel = Label(parent, bg='#32425B', fg='white', font=('Roboto',8), text="PASSWORD", borderwidth=0)
     passwordLabel.place(relx=0.1, rely=0.45, anchor=W)
-    passwordEntry = Entry(parent, bd=0, bg='#415575', fg='white', show="·", font=('Roboto',24), relief=FLAT)
+    passwordEntry = Entry(parent, bd=0, bg='#415575', fg='white', font=('Roboto',12), relief=FLAT)
     passwordEntry.place(relx=0.1, rely=0.5, anchor=W, width=300, height=25)
 
     passwordStrengthLabel = Label(parent, bg='#32425B', fg='white', font=('Roboto',8), text="PASSWORD STRENGTH: ", borderwidth=0)
@@ -221,8 +190,10 @@ class AddNewPassword(Dashboard):
     notesEntry.place(relx=0.1, rely=0.7, anchor=W, width=300, height=25)
 
     logoLabel.place(relx=0.9, rely=0.5, anchor=E, width=100, height=100)
-    saveButton = Button(parent, text = "SAVE", anchor = W, bg="#1ED5B9", fg="white", bd=0, padx=130, command= lambda: self.handleSavePassword(websiteEntry, loginEntry, passwordEntry, notesEntry, AddNewPassword.logo))
+    saveButton = Button(parent, text = "SAVE", anchor = W, bg="#1ED5B9", fg="white", bd=0, padx=130, command= lambda: self.handleSavePassword(parent, websiteEntry, loginEntry, passwordEntry, notesEntry, AddNewPassword.logo))
     saveButton.place(relx=0.1, rely=0.8, anchor=W, width=300, height=25)
+
+    #PasswordList().createWindow(parent)
 
   def callback(self, sv, logoLabel):
     url = 'http://logo.clearbit.com/{}?size=80'.format(sv.get())
@@ -233,5 +204,140 @@ class AddNewPassword(Dashboard):
       logoLabel.configure(image = logotk)
       logoLabel.image = logotk
       AddNewPassword.logo = logo
-  def handleSavePassword(self, websiteEntry, loginEntry, passwordEntry, notesEntry, logo):
+  def handleSavePassword(self, parent, websiteEntry, loginEntry, passwordEntry, notesEntry, logo):
     Root.userController.addPassword(websiteEntry.get(), loginEntry.get(), passwordEntry.get(), notesEntry.get(), logo)
+    PasswordList().createWindow(parent)
+
+class PasswordList(Dashboard):
+  def __init__(self):
+    pass
+  def createWindow(self, parent):
+    for child in parent.winfo_children():
+      child.destroy()
+    h1 = Label(parent, bg='#32425B', fg='white', font=('Roboto',14), borderwidth=0, text="Passwords")
+    h1.place(relx=0.1, rely=0.1, anchor=W)
+    addNew = Button(parent, bg='#198a78', fg='white', font=('Roboto',10), text="Add new", borderwidth=0, command=lambda:self.handleAddNewPassword())
+    addNew.place(relx=0.95, rely=0.1, anchor=E)
+    canvas = Canvas(parent, height=380, bg='#32425B', bd=0, highlightthickness=0, relief='ridge')
+    scroll_y = Scrollbar(parent, orient="vertical", command=canvas.yview, bg='#32425B')
+
+    listOfButtons = Frame(canvas, height=380, borderwidth=0, bg='#32425B')
+    row = column = 0
+    for password in Dashboard.userController.user.getPasswords():
+      card = Label(listOfButtons, borderwidth=0, bg='#32425B', width=100)
+      if password.getLogo() == None:
+        '''
+        cardLogotk = ImageTk.PhotoImage(password.getLogo())
+        cardLogo = Label(card, borderwidth=0, bg='#32425B', image=cardLogotk)
+        cardLogo.image = cardLogotk
+        cardButton = Button(card, text=password.getWebsite(), bg='#32425B', fg='white', borderwidth=0, compound=TOP, width=100, padx=20, pady=20, wraplength=100, command=lambda password=password: PasswordTab().createWindow(password))
+        '''
+        cardButton = Button(card, text=password.getWebsite(), bg='#32425B', fg='white', borderwidth=0, width=10, padx=20, pady=20, command=lambda password=password: PasswordTab().createWindow(parent, password))
+      else:
+        cardLogotk = ImageTk.PhotoImage(password.getLogo().resize((50,50), Image.ANTIALIAS))
+        cardLogo = Label(card, borderwidth=0, bg='#32425B', image=cardLogotk)
+        cardLogo.image = cardLogotk
+        cardButton = Button(card, text=password.getWebsite(), bg='#32425B', fg='white', borderwidth=0, image =cardLogotk, compound=TOP, width=100, padx=20, pady=20, wraplength=100, command=lambda password=password: PasswordTab().createWindow(parent, password))
+      cardButton.pack()
+      card.grid(row=int(row), column=column%4)
+      row=row+0.25
+      column=column+1
+    canvas.create_window(0, 0, anchor='nw', window=listOfButtons)
+    canvas.update_idletasks()
+
+    canvas.configure(scrollregion=canvas.bbox('all'), yscrollcommand=scroll_y.set)
+                    
+    canvas.place(relx=0, rely=1, anchor=SW, width=600)
+    scroll_y.place(relx=1, rely=1, anchor=SE, height=380)
+  def handleAddNewPassword(self):
+    AddNewPassword().createWindow(Dashboard.rightTab)
+  def handleAddNewCreditCard(self, h1, addNew):
+    h1.configure(text="Add New Password")
+    addNew.destroy()
+  def handleAddNewNote(self, h1, addNew):
+    h1.configure(text="Add New Password")
+    addNew.destroy()
+class PasswordTab(Dashboard):
+  def __init__(self):
+    pass
+  def createWindow(self, parent, password):
+    for child in parent.winfo_children():
+      child.destroy()
+    Label(parent, bg='#32425B', fg='white', font=('Roboto',16), text="Password for "+password.getWebsite(), borderwidth=0).place(relx=0.1, rely=0.2, anchor=W)
+    Label(parent, bg='#32425B', fg='white', text="LOGIN", borderwidth=0).place(relx=0.1, rely=0.35, anchor=W)
+    Label(parent, bg='#415575', fg='white', font=('Roboto',14), text=password.getLogin(), borderwidth=0).place(relx=0.1, rely=0.4, anchor=W)
+    Label(parent, bg='#32425B', fg='white', text="PASSWORD", borderwidth=0).place(relx=0.1, rely=0.45, anchor=W)
+    Label(parent, bg='#415575', fg='white', font=('Roboto',14), text=password.getPassword(), borderwidth=0).place(relx=0.1, rely=0.5, anchor=W)
+    Label(parent, bg='#32425B', fg='white', text="NOTE", borderwidth=0).place(relx=0.1, rely=0.55, anchor=W)
+    Label(parent, bg='#415575', fg='white', font=('Roboto',14), text=password.getNote(), borderwidth=0).place(relx=0.1, rely=0.6, anchor=W)
+    
+    copyPassword = Button(parent, text = "COPY PASSWORD TO CLIPBOARD", bg='#3a4d6b', fg="white", bd=0, command= lambda: self.copyPasswordToClipboard(password))
+    copyPassword.place(relx=0.1, rely=0.7, anchor=W, width=330, height=25)
+
+    editPassword = Button(parent, text = "EDIT", bg="#1ED5B9", fg="white", bd=0, command= lambda: self.handleEditPassword(parent, password))
+    editPassword.place(relx=0.1, rely=0.8, anchor=W, width=150, height=25)
+
+    deleteButton = Button(parent, text = "DELETE", bg="#BF4342", fg="white", bd=0, command= lambda: self.deletePassword(parent, Dashboard.userController.user, password))
+    deleteButton.place(relx=0.4, rely=0.8, anchor=W, width=150, height=25)
+    if password.getLogo() != None:
+      cardLogotk = ImageTk.PhotoImage(password.getLogo())
+      cardLogo = Label(parent, borderwidth=0, bg='#32425B', image=cardLogotk)
+      cardLogo.image = cardLogotk
+      cardLogo.place(relx=0.9, rely=0.5, anchor=E, width=100, height=100)
+  
+  def deletePassword(self, parent, user, password):
+    confirmation = messagebox.askquestion("Delete", "Are You Sure?", icon='warning')
+    if confirmation == 'yes':
+      Dashboard.userController.deletePassword(user, password)
+      PasswordList().createWindow(parent)
+    
+
+  def copyPasswordToClipboard(self, password):
+    Root.root.clipboard_clear()
+    Root.root.clipboard_append(password.getPassword())
+    Root.root.update() 
+
+  def handleEditPassword(self, parent, password):
+    EditPassword().createWindow(parent, password)
+class EditPassword(Dashboard):
+  def __init__(self):
+    pass 
+  def createWindow(self, parent, password):
+    for child in parent.winfo_children():
+      child.destroy()
+    h1 = Label(parent, bg='#32425B', fg='white', font=('Roboto',14), borderwidth=0, text='Edit credentials for '+password.getWebsite())
+    h1.place(relx=0.1, rely=0.1, anchor=W)
+
+    if password.getLogo()!= None:
+      logotk = ImageTk.PhotoImage(password.getLogo())
+      logoLabel = Label(parent, borderwidth=0, bg='#32425B', image=logotk)
+      logoLabel.image = logotk
+      logoLabel.place(relx=0.9, rely=0.5, anchor=E, width=100, height=100)
+
+    loginLabel = Label(parent, bg='#32425B', fg='white', font=('Roboto',8), text="LOGIN ID", borderwidth=0)
+    loginLabel.place(relx=0.1, rely=0.3, anchor=W)
+    loginEntry = Entry(parent, bd=0, bg='#415575', fg='white', font=('Roboto',12), relief=FLAT)
+    loginEntry.place(relx=0.1, rely=0.35, anchor=W, width=300, height=25)
+    loginEntry.insert(0, password.getLogin())
+
+    passwordLabel = Label(parent, bg='#32425B', fg='white', font=('Roboto',8), text="PASSWORD", borderwidth=0)
+    passwordLabel.place(relx=0.1, rely=0.4, anchor=W)
+    passwordEntry = Entry(parent, bd=0, bg='#415575', fg='white', font=('Roboto',12), relief=FLAT)
+    passwordEntry.place(relx=0.1, rely=0.45, anchor=W, width=300, height=25)
+    passwordEntry.insert(0, password.getPassword())
+
+    passwordStrengthLabel = Label(parent, bg='#32425B', fg='white', font=('Roboto',8), text="PASSWORD STRENGTH: ", borderwidth=0)
+    passwordStrengthLabel.place(relx=0.1, rely=0.5, anchor=W)
+
+    notesLabel = Label(parent, bg='#32425B', fg='white', font=('Roboto',8), text="NOTES", borderwidth=0)
+    notesLabel.place(relx=0.1, rely=0.6, anchor=W)
+    notesEntry = Entry(parent, bd=0, bg='#415575', fg='white', font=('Roboto',12), relief=FLAT)
+    notesEntry.place(relx=0.1, rely=0.65, anchor=W, width=300, height=25)
+    notesEntry.insert(0, password.getNote())
+
+    saveButton = Button(parent, text = "SAVE", anchor = W, bg="#1ED5B9", fg="white", bd=0, padx=130, command= lambda: self.editPassword(parent, password, loginEntry, passwordEntry, notesEntry, password.getLogo()))
+    saveButton.place(relx=0.1, rely=0.75, anchor=W, width=300, height=25)
+  
+  def editPassword(self, parent, oldPassword, loginEntry, passwordEntry, notesEntry, logo):
+    Dashboard.userController.editPassword(oldPassword, loginEntry.get(), passwordEntry.get(), notesEntry.get(), logo)
+    PasswordList().createWindow(parent)

@@ -20,5 +20,8 @@ class User:
   def addPassword(self, password):
     self.passwords.append(password)
     
+  def deletePassword(self, password):
+    self.passwords.remove(password)
+
   def getPasswords(self):
     return self.passwords

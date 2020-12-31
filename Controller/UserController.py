@@ -42,7 +42,25 @@ class UserController:
       if user.getUsername() == self.user.getUsername():
         user.addPassword(password)
         self.user = user
-    print(self.users)
     with open('data.pkl', 'wb') as output:
       pickle.dump(self.getUsers(), output, pickle.HIGHEST_PROTOCOL)
+
+  def deletePassword(self, user, password):
+    for user in self.getUsers():
+      if user.getUsername() == self.user.getUsername():
+        user.deletePassword(password)
+        self.user = user
+    with open('data.pkl', 'wb') as output:
+      pickle.dump(self.getUsers(), output, pickle.HIGHEST_PROTOCOL)
+  
+  def editPassword(self, oldPassword, login, password, note, logo):
+    for user in self.getUsers():
+      if user.getUsername() == self.user.getUsername():
+        passwordToEdit = [p for p in user.getPasswords() if p == oldPassword][0]
+        passwordToEdit.setLogin(login)
+        passwordToEdit.setPassword(password)
+        passwordToEdit.setNote(note)
+    with open('data.pkl', 'wb') as output:
+      pickle.dump(self.getUsers(), output, pickle.HIGHEST_PROTOCOL)
+
   
