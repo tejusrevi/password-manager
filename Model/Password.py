@@ -1,10 +1,15 @@
 class Password:
-  def __init__(self, website, login, password, note, logo):
-    self.website = website
-    self.login = login
-    self.password = password
-    self.note = note
-    self.logo = logo
+  def __init__(self, website, login, password, note, logo, cipherKey):
+    self.setWebsite(website)
+    self.setLogin(login)
+    self.setPassword(password)
+    self.setNote(note)
+    self.setLogo(logo)
+    self.setCipherKey(cipherKey)
+  def setCipherKey(self, cipherKey):
+    self.cipherKey = cipherKey
+  def getCipherKey(self):
+    return self.cipherKey
   def setWebsite(self, website):
     self.website = website
   def getWebsite(self):

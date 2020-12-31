@@ -1,8 +1,14 @@
 class User:
-  def __init__(self, username, masterPassword):
-    self.username = username
-    self.masterPassword = masterPassword
+  def __init__(self, username, masterPassword, cipherKey):
+    self.setUsername(username)
+    self.setMasterPassword(masterPassword)
+    self.setCipherKey(cipherKey)
     self.passwords = []
+
+  def setCipherKey(self, cipherKey):
+    self.cipherKey = cipherKey
+  def getCipherKey(self):
+    return self.cipherKey
 
   def setUsername(self, username):
     self.username = username
