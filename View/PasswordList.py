@@ -1,8 +1,10 @@
-from tkinter import *
-from View.AddNewPassword import AddNewPassword
+from tkinter import Label, Frame, Entry, Button, Canvas, Scrollbar
+from tkinter.constants import *
+
+from View.AddNewPasswordForm import AddNewPasswordForm
 from PIL import Image, ImageTk
 
-from View.PasswordTab import PasswordTab
+from View.SinglePassword import SinglePassword
 
 class PasswordList:
   def __init__(self, passwords):
@@ -22,32 +24,24 @@ class PasswordList:
     for password in self.passwords:
       card = Label(listOfButtons, borderwidth=0, bg='#32425B', width=100)
       if password.getLogo() == None:
-        '''
-        cardLogotk = ImageTk.PhotoImage(password.getLogo())
-        cardLogo = Label(card, borderwidth=0, bg='#32425B', image=cardLogotk)
-        cardLogo.image = cardLogotk
-        cardButton = Button(card, text=password.getWebsite(), bg='#32425B', fg='white', borderwidth=0, compound=TOP, width=100, padx=20, pady=20, wraplength=100, command=lambda password=password: PasswordTab().createWindow(password))
-        '''
-        cardButton = Button(card, text=password.getWebsite(), bg='#32425B', fg='white', borderwidth=0, width=10, padx=20, pady=20, command=lambda password=password: PasswordTab(password).createWindow(parent, copyPasswordToClipboard, handleEditPassword, deletePassword, getDecryptedPassword))
+        cardButton = Button(card, text=password.getWebsite(), bg='#32425B', fg='white', borderwidth=0, width=10, padx=20, pady=20, command=lambda password=password: SinglePassword(password).createWindow(parent, copyPasswordToClipboard, handleEditPassword, deletePassword, getDecryptedPassword))
       else:
         cardLogotk = ImageTk.PhotoImage(password.getLogo().resize((50,50), Image.ANTIALIAS))
         cardLogo = Label(card, borderwidth=0, bg='#32425B', image=cardLogotk)
         cardLogo.image = cardLogotk
-        cardButton = Button(card, text=password.getWebsite(), bg='#32425B', fg='white', borderwidth=0, image =cardLogotk, compound=TOP, width=100, padx=20, pady=20, wraplength=100, command=lambda password=password: PasswordTab(password).createWindow(parent, copyPasswordToClipboard, handleEditPassword, deletePassword, getDecryptedPassword))
+        cardButton = Button(card, text=password.getWebsite(), bg='#32425B', fg='white', borderwidth=0, image =cardLogotk, compound=TOP, width=100, padx=20, pady=20, wraplength=100, command=lambda password=password: SinglePassword(password).createWindow(parent, copyPasswordToClipboard, handleEditPassword, deletePassword, getDecryptedPassword))
       cardButton.pack()
       card.grid(row=int(row), column=column%4)
       row=row+0.25
       column=column+1
     canvas.create_window(0, 0, anchor='nw', window=listOfButtons)
     canvas.update_idletasks()
-
-    canvas.configure(scrollregion=canvas.bbox('all'), yscrollcommand=scroll_y.set)
-                    
+    canvas.configure(scrollregion=canvas.bbox('all'), yscrollcommand=scroll_y.set)       
     canvas.place(relx=0, rely=1, anchor=SW, width=600)
     scroll_y.place(relx=1, rely=1, anchor=SE, height=380)
 
   def handleAddNewPassword(self, parent, handleSavePassword):
-    AddNewPassword().createWindow(parent, handleSavePassword)
+    AddNewPasswordForm().createWindow(parent, handleSavePassword)
   def handleAddNewCreditCard(self, h1, addNew):
     h1.configure(text="Add New Password")
     addNew.destroy()

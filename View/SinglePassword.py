@@ -1,20 +1,21 @@
-from tkinter import *
+from tkinter import Label, Button
+from tkinter.constants import *
+
 from PIL import Image, ImageTk
 
-
-class PasswordTab:
+class SinglePassword:
   def __init__(self, password):
     self.password = password
   def createWindow(self, parent, copyPasswordToClipboard, handleEditPassword, deletePassword, getDecryptedPassword):
     for child in parent.winfo_children():
       child.destroy()
     Label(parent, bg='#32425B', fg='white', font=('Roboto',16), text="Password for "+self.password.getWebsite(), borderwidth=0).place(relx=0.1, rely=0.2, anchor=W)
-    Label(parent, bg='#32425B', fg='white', text="LOGIN", borderwidth=0).place(relx=0.1, rely=0.35, anchor=W)
-    Label(parent, bg='#415575', fg='white', font=('Roboto',14), text=self.password.getLogin(), borderwidth=0).place(relx=0.1, rely=0.4, anchor=W)
-    Label(parent, bg='#32425B', fg='white', text="PASSWORD", borderwidth=0).place(relx=0.1, rely=0.45, anchor=W)
-    Label(parent, bg='#415575', fg='white', font=('Roboto',14), text=getDecryptedPassword(self.password), borderwidth=0).place(relx=0.1, rely=0.5, anchor=W)
-    Label(parent, bg='#32425B', fg='white', text="NOTE", borderwidth=0).place(relx=0.1, rely=0.55, anchor=W)
-    Label(parent, bg='#415575', fg='white', font=('Roboto',14), text=self.password.getNote(), borderwidth=0).place(relx=0.1, rely=0.6, anchor=W)
+    Label(parent, bg='#32425B', fg='white', font=('Roboto',8), text="LOGIN ID", borderwidth=0).place(relx=0.1, rely=0.3, anchor=W)
+    Label(parent, bg='#32425B', fg='white', font=('Roboto',12), text=self.password.getLogin(), borderwidth=0).place(relx=0.1, rely=0.35, anchor=W)
+    Label(parent, bg='#32425B', fg='white', font=('Roboto',8), text="PASSWORD", borderwidth=0).place(relx=0.1, rely=0.425, anchor=W)
+    Label(parent, bg='#32425B', fg='white', font=('Roboto',12), text=getDecryptedPassword(self.password), borderwidth=0).place(relx=0.1, rely=0.475, anchor=W)
+    Label(parent, bg='#32425B', fg='white', font=('Roboto',8), text="NOTES", borderwidth=0).place(relx=0.1, rely=0.55, anchor=W)
+    Label(parent, bg='#32425B', fg='white', font=('Roboto',12), text=self.password.getNote(), borderwidth=0).place(relx=0.1, rely=0.6, anchor=W)
     
     copyPassword = Button(parent, text = "COPY PASSWORD TO CLIPBOARD", bg='#3a4d6b', fg="white", bd=0, command= lambda: copyPasswordToClipboard(self.password))
     copyPassword.place(relx=0.1, rely=0.7, anchor=W, width=330, height=25)

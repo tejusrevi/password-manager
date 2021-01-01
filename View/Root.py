@@ -1,6 +1,6 @@
 from tkinter import *
 from PIL import Image, ImageTk
-import webbrowser
+import webbrowser, os.path, sys
 
 from Controller.UserController import UserController
 
@@ -21,12 +21,12 @@ class Root:
     pass
   def createWindow(self):
     Root.root.resizable(False, False)
-    Root.root.iconbitmap('assets/images/logo.ico')
-    Root.root.title('Password Manager')
+    Root.root.iconbitmap(self.resource_path('assets/images/logo.ico'))
+    Root.root.title('Password Book')
     Root.root.configure(background='#32425B')
     Root.root.geometry("800x450")
 
-    render = ImageTk.PhotoImage(Image.open('assets/images/bg.png'))
+    render = ImageTk.PhotoImage(Image.open(self.resource_path('assets/images/bg.png')))
     leftDecoration = Label(Root.loginScreen, image=render, borderwidth=0)
     leftDecoration.image = render
 
@@ -75,4 +75,12 @@ class Root:
 
   def handleLogout(self):
     Root.root.quit()
+
+  def resource_path(self, relative_path):    
+    try:       
+        base_path = sys._MEIPASS
+    except Exception:
+        base_path = os.path.abspath(".")
+    print(os.path.join(base_path, relative_path))
+    return os.path.join(base_path, relative_path)
 

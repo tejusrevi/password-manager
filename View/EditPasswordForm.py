@@ -1,7 +1,9 @@
-from tkinter import *
+from tkinter import Label, Entry, Button
+from tkinter.constants import *
+
 from PIL import Image, ImageTk
 
-class EditPassword:
+class EditPasswordForm:
   def __init__(self, password):
     self.password = password
   def createWindow(self, parent, editPassword, getDecryptedPassword):

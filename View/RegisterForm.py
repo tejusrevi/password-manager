@@ -1,10 +1,11 @@
-from tkinter import *
+from tkinter import Label, Frame, Entry, Button
+from tkinter.constants import *
 
 class RegisterForm():
   def __init__(self):
     pass
   def createWindow(self, parent, handleRegisterButton, handleGoToLogin):
-    Label(parent, bg='#32425B', fg='white', font=('Roboto',14), text="REGISTER", borderwidth=0).place(relx=0.5, rely=0.2, anchor=CENTER)
+    Label(parent, bg='#32425B', fg='white', font=('Roboto',16), text="REGISTER", borderwidth=0).place(relx=0.5, rely=0.2, anchor=CENTER)
     nameLabel = Label(parent, bg='#32425B', fg='white', font=('Roboto',8), text="USERNAME", borderwidth=0)
     nameLabel.place(relx=0.1, rely=0.3, anchor=W)
     nameEntry = Entry(parent, bd=0, bg='#415575', fg='white', font=('Roboto',12), relief=FLAT)

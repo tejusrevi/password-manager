@@ -1,8 +1,10 @@
-from tkinter import *
+from tkinter import Label, Frame, Entry, Button, Radiobutton, IntVar, Tk
+from tkinter.constants import *
+
 from View.PasswordList import PasswordList
 from tkinter import messagebox
 
-from View.EditPassword import EditPassword
+from View.EditPasswordForm import EditPasswordForm
 
 class Dashboard:
   def __init__(self, userController):
@@ -32,18 +34,18 @@ class Dashboard:
     parent.pack()
 
   def handleRadioButton(self, var, parent):
-    for child in parent.winfo_children():
-      child.destroy()
     if var.get() == 1:
       parent.place(relx=1, rely=0.5, anchor=E, width=600, height=450)
       PasswordList(self.userController.user.passwords).createWindow(parent,self.handleSavePassword, self.copyPasswordToClipboard, self.handleEditPassword, self.deletePassword, self.getDecryptedPassword)
     elif var.get() == 2:
-      #h1.configure(text="Credit Cards")
-      #addNew.configure(command=lambda: self.handleAddNewCreditCard(h1, addNew))
+      for child in parent.winfo_children():
+        child.destroy()
+      Label(parent, bg='#3a4d6b', fg='white', font=('Roboto',8), text="To be added", borderwidth=0).pack( anchor = CENTER, pady=3)
       parent.place(relx=1, rely=0.5, anchor=E, width=600, height=450)
     elif var.get() == 3:
-      #h1.configure(text="Secure Notes")
-      #addNew.configure(command=lambda: self.handleAddNewNote(h1, addNew))
+      for child in parent.winfo_children():
+        child.destroy()
+      Label(parent, bg='#3a4d6b', fg='white', font=('Roboto',8), text="To be added", borderwidth=0).pack( anchor = CENTER, pady=3)
       parent.place(relx=1, rely=0.5, anchor=E, width=600, height=450)
 
   def deletePassword(self, parent, password):
@@ -61,7 +63,7 @@ class Dashboard:
     tk.update() 
 
   def handleEditPassword(self, parent, password):
-    EditPassword(password).createWindow(parent, self.editPassword, self.getDecryptedPassword)
+    EditPasswordForm(password).createWindow(parent, self.editPassword, self.getDecryptedPassword)
   
   
   def handleSavePassword(self, parent, websiteEntry, loginEntry, passwordEntry, notesEntry, logo):
