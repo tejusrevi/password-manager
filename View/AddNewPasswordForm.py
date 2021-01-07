@@ -51,7 +51,7 @@ class AddNewPasswordForm:
 
     #PasswordList().createWindow(parent)
   def websiteCallback(self, sv, logoLabel):
-    url = 'http://logo.clearbit.com/{}?size=80'.format(sv.get())
+    url = 'http://logo.clearbit.com/{}?size=80'.format(sv.get()+'.com')
     response = requests.get(url)
     if(response.status_code == 200):
       logo = Image.open(BytesIO(response.content)).resize((100,100), Image.ANTIALIAS)

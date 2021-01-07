@@ -10,7 +10,7 @@ from View.Dashboard import Dashboard
 
 class Root:
   root = Tk()
-  loginScreen = Frame(root, bg='#32425B', width = 800, height=450)
+  loginScreen = Frame(root, bg='#32425B')
   form = Frame(loginScreen, bg='#32425B', width = 400, height=450)
   loginForm = Frame(form, bg='#32425B', width = 400, height=450)
   registerForm = Frame(form, bg='#32425B', width = 400, height=450)
